@@ -1,0 +1,42 @@
+#eval 2+5
+#eval 1+2*5
+
+#eval (2-44 : Int)
+
+#check 2 + 3 * 2 + 5
+
+#eval String.append "Hello, " "Lean!"
+
+#eval if (2 < 4) then "hi" else "bye"
+
+#check String.append "is is "
+
+def hello := "Oi "
+
+#check hello
+
+#eval String.append hello "mundo"
+
+def g (n : Nat) (m : Nat) := n + m + 2
+
+#eval f 1 2
+
+def f (n m : Nat) := n + m + 2
+
+#eval f 1 1
+
+structure Point where
+  x : Float
+  y : Float
+--deriving Repr
+
+def origin : Point := { x := 0.0, y := 0.0}
+
+def notorigin : Point := { x := 3.4, y := 5.6}
+
+#eval origin
+
+def addPoints (p1 : Point) (p2 : Point) : Point :=
+  { x := p1.x + p2.x, y := p1.y + p2.y }
+
+#eval addPoints origin notorigin
