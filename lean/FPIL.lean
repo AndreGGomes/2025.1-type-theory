@@ -19,7 +19,7 @@ def hello := "Oi "
 
 def g (n : Nat) (m : Nat) := n + m + 2
 
-#eval f 1 2
+#eval g 1 2
 
 def f (n m : Nat) := n + m + 2
 
