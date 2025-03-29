@@ -21,14 +21,13 @@ def g (n : Nat) (m : Nat) := n + m + 2
 
 #eval g 1 2
 
-def f (n m : Nat) := n + m + 2
 
-#eval f 1 1
-
-structure Point where
+structure Point where --defining a structure
   x : Float
   y : Float
 --deriving Repr
+
+def pt : Point := {x := 2.5 , y := 2.5}
 
 def origin : Point := { x := 0.0, y := 0.0}
 
@@ -40,3 +39,5 @@ def addPoints (p1 : Point) (p2 : Point) : Point :=
   { x := p1.x + p2.x, y := p1.y + p2.y }
 
 #eval addPoints origin notorigin
+
+#check (Point.mk)  --checks the constructor itself
