@@ -1,0 +1,47 @@
+    {
+        "files.exclude": {
+            "**/.git": true,
+            "**/.svn": true,
+            "**/.hg": true,
+            "**/CVS": true,
+            "**/.DS_Store": true,
+            "**/.DS_yml": true,
+            "**/_target": true,
+            "**/.lake": true,
+            "**/.devcontainer": true,
+            "**/.docker": true,
+            "**/.github": true,
+            "**/.gitignore": true,
+            "**/mk_exercises.py": true,
+            "**/lake-manifest.json": true,
+            "**/lakefile.toml": true,
+            "**/lean-toolchain": true,
+            "**/.gitpod.yml": true,
+            "**/.vscode": true,
+            "**/*.olean": true
+        },
+        "editor.minimap.enabled": false,
+        "editor.acceptSuggestionOnEnter": "off",
+        "editor.quickSuggestions.comments": true,
+        "scm.diffDecorationsGutterVisibility": "hover",
+        "editor.semanticHighlighting.enabled": true,
+        "editor.semanticTokenColorCustomizations": {
+            "[Default Light+]": {"rules": {"variable": "#1a31da"}}
+        },
+        "editor.unicodeHighlight.nonBasicASCII": false,
+        "editor.unicodeHighlight.ambiguousCharacters": false,
+        "editor.fontLigatures": true,
+        "files.trimTrailingWhitespace": true,
+        "files.trimFinalNewlines": true,
+        "extensions.ignoreRecommendations": true,
+        "lean4.infoview.emphasizeFirstGoal": true,
+        "lean4.infoview.showExpectedType": false,
+        "lean4.infoview.showGoalNames": false,
+        "lean4.input.customTranslations": {
+            "^*": " ⃰",
+            "_*": "⁎",
+            "pull": " ⃰",
+            "push": "⁎"
+            },
+        "editor.rulers": [100],
+        }
