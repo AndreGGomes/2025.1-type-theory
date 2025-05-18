@@ -26,7 +26,7 @@ def sum_curry (a : Int) (b : Int) := a + b
 #eval uncurry sum_curry (1, 2)
 
 def sum_uncurry (p : Int × Int) : Int :=
-  p.fst + p.snd -- this could be also p.1 + p.2
+  p.fst + p.snd -- this could also be p.1 + p.2
 
 #eval sum_uncurry (1, 2)
 
