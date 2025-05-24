@@ -51,11 +51,30 @@ example (ubf : FnHasUb f) (ubg : FnHasUb g) : FnHasUb fun x ↦ f x + g x := by
   use a + b
   apply fnUb_add ubfa ubgb
 
-example (lbf : FnHasLb f) (lbg : FnHasLb g) : FnHasLb fun x ↦ f x + g x := by
-  sorry
+example (lbf : FnHasLb f) (lbg : FnHasLb g) : FnHasLb fun x ↦ f x + g x := by {
+  unfold FnHasLb
+  rcases lbf with ⟨a, lbfa⟩
+  rcases lbg with ⟨b, lbgb⟩
+  unfold FnLb at lbfa; unfold FnLb at lbgb; unfold FnLb
+  dsimp
+  use a + b
+  intro x
+  specialize lbfa x; specialize lbgb x
+  linarith
 
-example {c : ℝ} (ubf : FnHasUb f) (h : c ≥ 0) : FnHasUb fun x ↦ c * f x := by
-  sorry
+}
+
+example {c : ℝ} (ubf : FnHasUb f) (h : c ≥ 0) : FnHasUb fun x ↦ c * f x := by{
+  rcases ubf with ⟨a, ubfa⟩
+  unfold FnHasUb
+  use a*c
+  intro x
+  dsimp
+  specialize ubfa x
+  rw [mul_comm]
+  exact mul_le_mul_of_nonneg_right ubfa h
+
+}
 
 example : FnHasUb f → FnHasUb g → FnHasUb fun x ↦ f x + g x := by
   rintro ⟨a, ubfa⟩ ⟨b, ubgb⟩
@@ -129,7 +148,12 @@ example (divab : a ∣ b) (divbc : b ∣ c) : a ∣ c := by
   use d * e; ring
 
 example (divab : a ∣ b) (divac : a ∣ c) : a ∣ b + c := by
-  sorry
+  rcases divab with ⟨d, hd⟩
+  rcases divac with ⟨e, he⟩
+  rw [hd, he]
+  use d + e;
+  ring
+
 
 end
 
@@ -143,7 +167,11 @@ example {c : ℝ} : Surjective fun x ↦ x + c := by
   dsimp; ring
 
 example {c : ℝ} (h : c ≠ 0) : Surjective fun x ↦ c * x := by
-  sorry
+  intro x
+  dsimp
+  use x / c;
+  exact mul_div_cancel₀ x h
+
 
 example (x y : ℝ) (h : x - y ≠ 0) : (x ^ 2 - y ^ 2) / (x - y) = x + y := by
   field_simp [h]
@@ -163,6 +191,16 @@ variable {α : Type*} {β : Type*} {γ : Type*}
 variable {g : β → γ} {f : α → β}
 
 example (surjg : Surjective g) (surjf : Surjective f) : Surjective fun x ↦ g (f x) := by
-  sorry
+  unfold Surjective
+  intro x
+  dsimp
+  unfold Surjective at surjg; unfold Surjective at surjf
+  specialize surjg x
+  rcases surjg with ⟨b, hb⟩
+  specialize surjf b
+  rcases surjf with ⟨c, hc⟩
+  use c
+  rw [hc]
+  exact hb
 
 end
