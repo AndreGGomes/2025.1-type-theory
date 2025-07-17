@@ -118,11 +118,16 @@ example {M : Type} [Monoid₁ M] {a b c : M} (hba : b ⋄ a = 𝟙) (hac : a ⋄
   rw [← one_dia c, ← hba, dia_assoc, hac, dia_one b]
 
 
-lemma inv_eq_of_dia [Group₁ G] {a b : G} (h : a ⋄ b = 𝟙) : a⁻¹ = b :=
-  sorry
+lemma inv_eq_of_dia [Group₁ G] {a b : G} (h : a ⋄ b = 𝟙) : a⁻¹ = b := by {
+  apply left_inv_eq_right_inv₁
+  exact inv_dia a
+  exact h
+}
 
-lemma dia_inv [Group₁ G] (a : G) : a ⋄ a⁻¹ = 𝟙 :=
-  sorry
+lemma dia_inv [Group₁ G] (a : G) : a ⋄ a⁻¹ = 𝟙 := by {
+  rw [←inv_dia a⁻¹]
+  rw [inv_eq_of_dia (inv_dia a)]
+}
 
 
 
@@ -176,21 +181,29 @@ attribute [simp] Group₃.inv_mul AddGroup₃.neg_add
 
 
 @[to_additive]
-lemma inv_eq_of_mul [Group₃ G] {a b : G} (h : a * b = 1) : a⁻¹ = b :=
-  sorry
+lemma inv_eq_of_mul [Group₃ G] {a b : G} (h : a * b = 1) : a⁻¹ = b := by {
+  apply left_inv_eq_right_inv'
+  exact Group₃.inv_mul a
+  exact h
+}
 
 
 @[to_additive (attr := simp)]
-lemma Group₃.mul_inv {G : Type} [Group₃ G] {a : G} : a * a⁻¹ = 1 := by
-  sorry
+lemma Group₃.mul_inv {G : Type} [Group₃ G] {a : G} : a * a⁻¹ = 1 := by {
+  rw [←inv_mul a⁻¹]
+  rw [inv_eq_of_mul (inv_mul a)]
+}
 
 @[to_additive]
-lemma mul_left_cancel₃ {G : Type} [Group₃ G] {a b c : G} (h : a * b = a * c) : b = c := by
-  sorry
+lemma mul_left_cancel₃ {G : Type} [Group₃ G] {a b c : G} (h : a * b = a * c) : b = c := by {
+  simpa [← mul_assoc₃] using congr_arg (a⁻¹ * ·) h
+
+}
 
 @[to_additive]
-lemma mul_right_cancel₃ {G : Type} [Group₃ G] {a b c : G} (h : b*a = c*a) : b = c := by
-  sorry
+lemma mul_right_cancel₃ {G : Type} [Group₃ G] {a b c : G} (h : b*a = c*a) : b = c := by {
+  simpa [ mul_assoc₃] using congr_arg (· * a⁻¹) h
+}
 
 class AddCommGroup₃ (G : Type) extends AddGroup₃ G, AddCommMonoid₃ G
 
@@ -205,9 +218,21 @@ class Ring₃ (R : Type) extends AddGroup₃ R, Monoid₃ R, MulZeroClass R wher
   /-- Multiplication is right distributive over addition -/
   right_distrib : ∀ a b c : R, (a + b) * c = a * c + b * c
 
-instance {R : Type} [Ring₃ R] : AddCommGroup₃ R :=
-{ add_comm := by
-    sorry }
+instance {R : Type} [Ring₃ R] : AddCommGroup₃ R := { add_comm := by {
+  intro a b
+  have : a + (a + b + b) = a + (b + a + b) := by {
+    calc
+      a + (a + b + b) = (a + a) + (b + b) := by simp [add_assoc₃, add_assoc₃]
+      _ = (1 * a + 1 * a) + (1 * b + 1 * b) := by simp
+      _ = (1 + 1) * a + (1 + 1) * b := by simp [Ring₃.right_distrib]
+      _ = (1 + 1) * (a + b) := by simp [Ring₃.left_distrib]
+      _ = 1 * (a + b) + 1 * (a + b) := by simp [Ring₃.right_distrib]
+      _ = (a + b) + (a + b) := by simp
+      _ = a + (b + a + b) := by simp [add_assoc₃]
+    }
+  exact add_right_cancel₃ (add_left_cancel₃ this)
+  }
+}
 
 instance : Ring₃ ℤ where
   add := (· + ·)
@@ -311,4 +336,3 @@ instance : AddMonoid₄ ℤ where
     by rw [Int.add_mul, Int.add_comm, Int.one_mul]
 
 example (n : ℕ) (m : ℤ) : SMul.smul (self := mySMul) n m = n * m := rfl
-
